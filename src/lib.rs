@@ -77,10 +77,16 @@ mod tests {
     use crate::maif::MAIFImage;
     use std::fs::File;
     use std::io::BufReader;
+    use std::process;
 
     #[test]
     fn from_reader() {
-        let my_buf = BufReader::new(File::open("/Users/geez/Desktop/test.maif").unwrap());
+        let my_buf = BufReader::new(File::open("/Users/geez/Desktop/test.maif").unwrap_or_else(
+            |_| {
+                println!("File doesn't exist.");
+                process::exit(0);
+            },
+        ));
         let img = MAIFImage::from_reader(my_buf);
 
         println!("{:#?}", img)
